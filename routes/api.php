@@ -2,6 +2,10 @@
 
 /** @var \Laravel\Lumen\Routing\Router $router */
 
+use App\Http\Controllers\AuthController;
+use Illuminate\Auth\Events\Login;
+use Laravel\Lumen\Routing\Router;
+
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -15,4 +19,10 @@
 
 $router->get('/', function () use ($router) {
     return $router->app->version();
+});
+
+$router->post('/login', 'AuthController@login');
+
+$router->group(['middleware' => 'auth:api'], function ($router) {
+    $router->post('/logout', 'AuthController@logout');
 });

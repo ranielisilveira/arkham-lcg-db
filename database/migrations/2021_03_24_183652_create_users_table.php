@@ -20,7 +20,7 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->boolean('is_admin')->default(false);
             $table->boolean('is_verified')->default(false);
-            $table->boolean('mail_token')->nullable();
+            $table->string('mail_token')->nullable();
             $table->timestamps();
         });
     }

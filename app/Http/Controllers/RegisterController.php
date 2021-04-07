@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\UserRegisteredEvent;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -35,7 +37,7 @@ class RegisterController extends Controller
 
             $token = Uuid::uuid4()->toString();
 
-            User::create([
+            $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
@@ -44,8 +46,41 @@ class RegisterController extends Controller
                 'mail_token' => $token
             ]);
 
+            $url = env('APP_URL') . "/confirm-account/" . $token;
+
+            // mandar o email
+            event(new UserRegisteredEvent($url, $user));
+
             return response([
-                'message' => 'Sua conta foi criada com sucesso.',
+                'message' => 'Sua conta foi criada com sucesso. Para confirmá-la verifique seu email.',
+                'status' => 'success'
+            ], Response::HTTP_OK);
+        } catch (\Exception $exception) {
+            return response([
+                'message' => $exception->getMessage(),
+                'status' => 'error'
+            ], Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+    public function confirmAccount($token)
+    {
+        try {
+
+            $user = User::where([
+                'is_verified' => false,
+                'mail_token' => $token
+            ])->first();
+
+            if (!$user) {
+                throw new Exception("Sua conta já foi ativada anteriormente.");
+            }
+
+            $user->is_verified = true;
+            $user->save();
+
+            return response([
+                'message' => 'Sua conta foi ativada com sucesso.',
                 'status' => 'sucess'
             ], Response::HTTP_OK);
 
@@ -54,8 +89,8 @@ class RegisterController extends Controller
             return response([
                 'message' => $exception->getMessage(),
                 'status' => 'error'
-            ],Response::HTTP_BAD_REQUEST);
+            ], Response::HTTP_BAD_REQUEST);
 
-            }
+        }
     }
 }

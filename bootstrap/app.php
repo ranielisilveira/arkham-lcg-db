@@ -1,9 +1,9 @@
 <?php
 
-use Carbon\Carbon;
 use Dusterio\LumenPassport\LumenPassport;
+use Carbon\Carbon;
 
-require_once __DIR__.'/../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 $app = new \Dusterio\LumenPassport\Lumen7Application(
     dirname(__DIR__)
@@ -69,6 +69,11 @@ $app->singleton(
 $app->configure('app');
 $app->configure('auth');
 $app->configure('cors');
+$app->configure('mail');
+
+$app->alias('mailer', Illuminate\Mail\Mailer::class);
+$app->alias('mailer', Illuminate\Contracts\Mail\Mailer::class);
+$app->alias('mailer', Illuminate\Contracts\Mail\MailQueue::class);
 
 /*
 |--------------------------------------------------------------------------
@@ -82,12 +87,12 @@ $app->configure('cors');
 */
 
 $app->middleware([
-//     App\Http\Middleware\ExampleMiddleware::class
+    //     App\Http\Middleware\ExampleMiddleware::class
     Fruitcake\Cors\HandleCors::class,
 ]);
 
 $app->routeMiddleware([
-     'auth' => App\Http\Middleware\Authenticate::class,
+    'auth' => App\Http\Middleware\Authenticate::class,
 ]);
 
 /*
@@ -104,9 +109,12 @@ $app->routeMiddleware([
 $app->register(App\Providers\AppServiceProvider::class);
 $app->register(App\Providers\AuthServiceProvider::class);
 $app->register(App\Providers\EventServiceProvider::class);
-$app->register(Fruitcake\Cors\CorsserviceProvider::class);
+$app->register(Illuminate\Mail\MailServiceProvider::class);
+
+$app->register(Fruitcake\Cors\CorsServiceProvider::class);
 $app->register(Laravel\Passport\PassportServiceProvider::class);
 $app->register(Dusterio\LumenPassport\PassportServiceProvider::class);
+
 /*
 |--------------------------------------------------------------------------
 | Load The Application Routes
@@ -123,10 +131,9 @@ LumenPassport::tokensExpireIn(Carbon::now()->addYears(1), 2);
 $app->router->group([
     'namespace' => 'App\Http\Controllers',
 ], function ($router) {
-    require __DIR__.'/../routes/api.php';
+    require __DIR__ . '/../routes/api.php';
 });
 
 LumenPassport::routes($app);
-
 
 return $app;

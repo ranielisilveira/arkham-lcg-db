@@ -15,5 +15,8 @@ class EventServiceProvider extends ServiceProvider
         \App\Events\UserRegisteredEvent::class => [
             \App\Listeners\UserRegisteredListener::class,
         ],
+        \App\Events\UserChangePasswordEvent::class => [
+            \App\Listeners\UserChangePasswordListener::class,
+        ],
     ];
 }

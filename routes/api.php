@@ -25,6 +25,9 @@ $router->post('/login', 'AuthController@login');
 $router->post('/register', 'RegisterController@store');
 $router->get('/confirm-account/{token}', 'RegisterController@confirmAccount');
 
+$router->post('/password-recovery', 'PasswordRecoveryController@sendPasswordRecovery');
+$router->post('/password-change', 'PasswordRecoveryController@changePassword');
+
 $router->group(['middleware' => 'auth:api'], function ($router) {
     $router->post('/logout', 'AuthController@logout');
 });

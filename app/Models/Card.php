@@ -55,6 +55,9 @@ class Card extends Model
 
         "card_type_id",
         "card_set_id",
+        "card_encounters_id",
+        "card_slots_id",
+        "card_class_id",
 
     ];
 
@@ -63,4 +66,22 @@ class Card extends Model
         return $this->belongsTo(CardType::class, 'card_type_id');
     }
 
+    public function cardSet()
+    {
+        return $this->belongsTo(CardType::class, 'card_set_id');
+    }
+
+    public function cardEncounter()
+    {
+        return $this->belongsTo(CardEncounter::class, 'card_encounter_id');
+    }
+
+    public function cardSlot()
+    {
+        return $this->belongsTo(CardSlot::class, 'card_slot_id');
+    }
+    public function cardClass()
+    {
+        return $this->belongsTo(CardSlot::class, 'card_class_id');
+    }
 }

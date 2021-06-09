@@ -23,7 +23,7 @@ class CreateCardClassesTable extends Migration
         });
 
         Schema::table('cards', function (Blueprint $table) {
-            $table->integer('card_classes_id')->unsigned();
+            $table->integer('card_class_id')->unsigned();
         });
     }
 
@@ -37,7 +37,7 @@ class CreateCardClassesTable extends Migration
         Schema::dropIfExists('card_classes');
 
         Schema::table('cards', function (Blueprint $table) {
-            $table->dropColumn(['card_classes_id']);
+            $table->dropColumn(['card_class_id']);
         });
     }
 }

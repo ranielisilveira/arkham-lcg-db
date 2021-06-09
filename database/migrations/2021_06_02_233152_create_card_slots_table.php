@@ -13,14 +13,14 @@ class CreateCardSlotsTable extends Migration
      */
     public function up()
     {
-        Schema::create('card_slot', function (Blueprint $table) {
+        Schema::create('card_slots', function (Blueprint $table) {
             $table->id();
             $table->string('name', 250)->unique();
             $table->timestamps();
         });
 
         Schema::table('cards', function (Blueprint $table) {
-            $table->integer('card_slot_id')->unsigned();
+            $table->integer('card_slot_id')->unsigned()->nullable();
         });
     }
 
@@ -31,7 +31,7 @@ class CreateCardSlotsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('card_slot');
+        Schema::dropIfExists('card_slots');
 
         Schema::table('cards', function (Blueprint $table) {
             $table->dropColumn(['card_slot_id']);

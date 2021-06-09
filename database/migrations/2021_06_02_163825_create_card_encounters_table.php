@@ -21,7 +21,7 @@ class CreateCardEncountersTable extends Migration
         });
 
         Schema::table('cards', function (Blueprint $table) {
-            $table->integer('card_encounters_id')->unsigned();
+            $table->integer('card_encounters_id')->unsigned()->nullable();
         });
     }
 
